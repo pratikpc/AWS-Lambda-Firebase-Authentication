@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  AWS Lambda Firebase Authentication Example. Article written by Pratik Chowdhury
+
+Parameters:
+  FirebaseProjectId:
+    Type: String
+
+Resources:
+  AuthGatewayHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Auth:
+        Authorizers:
+          FirebaseAuthorizer:
+            IdentitySource: $request.header.Authorization
+            JwtConfiguration:
+              audience:
+                - !Ref FirebaseProjectId
+              issuer: !Sub https://securetoken.google.com/${FirebaseProjectId}
+        DefaultAuthorizer: FirebaseAuthorizer
+      StageName: "Prod"
+
+  AuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: function/
+      Handler: app.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        Gateway:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AuthGatewayHttpApi
+            Path: /hello
+            Method: GET
+Outputs:
+  API:
+    Description: "API Gateway endpoint URL for the stage for Auth function"
+    Value: !Sub "https://${AuthGatewayHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/"

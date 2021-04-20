@@ -1,0 +1,9 @@
+{
+  "name": "aws_lambda_firebase_auth",
+  "version": "1.0.0",
+  "description": "Use Firebase Auth to secure AWS Lambda",
+  "main": "app.js",
+  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
+  "author": "Praitk Chowdhury (pratikc@live.co.uk)",
+  "license": "MIT"
+}
